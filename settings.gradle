@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "5_2_1_Saving_restoring_text_to_an_internal_file"
