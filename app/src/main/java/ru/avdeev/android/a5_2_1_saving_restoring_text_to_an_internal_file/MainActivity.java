@@ -1,23 +1,23 @@
 package ru.avdeev.android.a5_2_1_saving_restoring_text_to_an_internal_file;
 
-import androidx.appcompat.app.AppCompatActivity;
+        import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+        import android.content.Context;
+        import android.os.Bundle;
+        import android.text.SpannableStringBuilder;
+        import android.text.style.RelativeSizeSpan;
+        import android.view.Gravity;
+        import android.view.View;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+        import java.io.BufferedReader;
+        import java.io.BufferedWriter;
+        import java.io.FileNotFoundException;
+        import java.io.IOException;
+        import java.io.InputStreamReader;
+        import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
         buttonRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String login = editTextLogin.getText().toString();
-                String pass = editTextPassword.getText().toString();
                 String[] loginPassText = {editTextLogin.getText().toString(), editTextPassword.getText().toString()};
                 saveIntoInternalStorage(loginPassText);
             }
@@ -75,7 +73,12 @@ public class MainActivity extends AppCompatActivity {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(openFileInput(FILE_NAME)));
-            return reader.readLine();
+            if (reader.readLine().length()>1) {
+                return reader.readLine();
+            } else {
+                showMyMessage(getString(R.string.checkData),this);
+                return null;
+            }
         } catch (IOException e) {
             e.printStackTrace();
             showMyMessage(getString(R.string.checkData),this);
@@ -120,6 +123,4 @@ public class MainActivity extends AppCompatActivity {
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
         toast.show();
     }
-
-
 }
