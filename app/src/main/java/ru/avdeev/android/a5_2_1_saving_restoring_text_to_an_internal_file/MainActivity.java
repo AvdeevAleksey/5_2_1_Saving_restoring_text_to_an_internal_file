@@ -44,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editTextLogin.getText().equals(null) || editTextPassword.getText().equals(null)) {
+                String login = editTextLogin.getText().toString();
+                String pass = editTextPassword.getText().toString();
+                if (login!="" || pass!="") {
                     String[] loginPassText = readFromInputStorage().split(",");
                     if (loginPassText[0].equals(editTextLogin.getText().toString()) && loginPassText[1].equals(editTextPassword.getText().toString())) {
                         showMyMessage(getString(R.string.successful_authorization),MainActivity.this);
@@ -61,12 +63,10 @@ public class MainActivity extends AppCompatActivity {
         buttonRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editTextLogin.getText().toString()=="" || editTextPassword.getText().toString()=="") {
-                    showMyMessage(getString(R.string.checkData), MainActivity.this);
-                } else {
-                    String[] loginPassText = {editTextLogin.getText().toString(), editTextPassword.getText().toString()};
-                    saveIntoInternalStorage(loginPassText);
-                }
+                String login = editTextLogin.getText().toString();
+                String pass = editTextPassword.getText().toString();
+                String[] loginPassText = {editTextLogin.getText().toString(), editTextPassword.getText().toString()};
+                saveIntoInternalStorage(loginPassText);
             }
         });
     }
@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
             return reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
+            showMyMessage(getString(R.string.checkData),this);
             return null;
         }finally {
             try {
@@ -90,21 +91,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveIntoInternalStorage(String[] loginPassText) {
         BufferedWriter writer = null;
-        try {
-           writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(FILE_NAME, Context.MODE_PRIVATE)));
-           writer.write(loginPassText[0] + "," + loginPassText[1]);
-           showMyMessage(getString(R.string.userRegistered),this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (writer!=null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    showMyMessage(getString(R.string.incorrectData),this);
+        if (loginPassText[0].length()!=0 && loginPassText[1].length()!=0) {
+            try {
+                writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(FILE_NAME, Context.MODE_PRIVATE)));
+                writer.write(loginPassText[0] + "," + loginPassText[1]);
+                showMyMessage(getString(R.string.userRegistered), this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (writer != null) {
+                    try {
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        showMyMessage(getString(R.string.incorrectData), this);
+                    }
                 }
             }
+        } else {
+            showMyMessage(getString(R.string.checkData),this);
         }
     }
     public void showMyMessage(String massage, Context context) {
